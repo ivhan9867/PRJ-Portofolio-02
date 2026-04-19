@@ -1,0 +1,160 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --accent: #c9a84c;
+    --accent-light: #e2c06b;
+    --muted: #6b6b6b;
+    --text: #f0ede8;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  ::-webkit-scrollbar { width: 0px; }
+  * { scrollbar-width: none; }
+
+  ::selection {
+    background: rgba(201, 168, 76, 0.25);
+    color: #f0ede8;
+  }
+}
+
+@layer components {
+  /* Grain overlay */
+  .grain::after {
+    content: '';
+    position: fixed;
+    inset: -200%;
+    width: 400%;
+    height: 400%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 9999;
+    animation: grain 0.3s steps(1) infinite;
+  }
+
+  /* Custom Cursor */
+  .cursor-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99999;
+    mix-blend-mode: difference;
+    transition: transform 0.1s;
+  }
+
+  .cursor-ring {
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 99998;
+    transition: transform 0.45s cubic-bezier(0.23,1,0.32,1), width 0.3s, height 0.3s, border-color 0.3s;
+  }
+
+  .cursor-ring.hovering {
+    width: 56px;
+    height: 56px;
+    border-color: var(--accent);
+    background: rgba(201,168,76,0.05);
+  }
+
+  /* Magnetic button effect */
+  .magnetic {
+    transition: transform 0.3s cubic-bezier(0.23,1,0.32,1);
+  }
+
+  /* Noise blob */
+  .blob {
+    filter: blur(80px);
+    border-radius: 50%;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  /* Scrolling strip */
+  .marquee-strip {
+    display: flex;
+    width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+
+  /* Text scramble */
+  .scramble-char {
+    display: inline-block;
+  }
+
+  /* Rolling slot */
+  .slot-wrapper {
+    display: inline-flex;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+}
+
+@keyframes grain {
+  0%,100% { transform: translate(0,0) }
+  10%      { transform: translate(-2%,-3%) }
+  20%      { transform: translate(-4%,2%) }
+  30%      { transform: translate(3%,-1%) }
+  40%      { transform: translate(-1%,4%) }
+  50%      { transform: translate(2%,-2%) }
+  60%      { transform: translate(4%,1%) }
+  70%      { transform: translate(-3%,3%) }
+  80%      { transform: translate(1%,-4%) }
+  90%      { transform: translate(-2%,1%) }
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0) }
+  100% { transform: translateX(-50%) }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0) }
+  50%     { transform: translateY(-12px) }
+}
+
+@keyframes pulseDot {
+  0%,100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5) }
+  50%     { box-shadow: 0 0 0 8px rgba(74,222,128,0) }
+}
+
+/* Canvas background */
+canvas.bg-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
